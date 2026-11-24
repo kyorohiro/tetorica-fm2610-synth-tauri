@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Play and edit Yamaha YM2610 / YM2610B sounds with Tetorica FM2610 Synth.">
+  <meta name="theme-color" content="#171512">
+  <title>Tetorica FM2610 Synth</title>
+  <link rel="icon" href="../tetorica_fm2610_synth.webp" type="image/webp">
+  <link rel="stylesheet" href="./synth.css">
+  <script type="module" src="./synth.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <nav class="masthead" aria-label="Tetorica">
+      <a href="https://kyorohiro.github.io/hello_ymfm_wasm/">← Tetorica</a>
+      <a href="https://kyorohiro.github.io/hello_ymfm_wasm/playground/index.html?mode=neogeo-b">Neo Geo Playground</a>
+    </nav>
+    <header class="app-header">
+      <details id="synthMenu" class="synth-menu">
+        <summary aria-label="Menu" title="Menu">☰</summary>
+        <div class="synth-menu-panel">
+          <section><h2>New</h2><div id="projectNew"></div></section>
+          <section>
+            <h2>Import</h2>
+            <button id="importVgm" type="button">VGM / VGZ…</button>
+            <div id="projectImport"></div>
+          </section>
+          <section><h2>Export</h2><div id="projectExport"></div></section>
+        </div>
+      </details>
+      <div class="product-identity">
+        <img src="../tetorica_fm2610_synth.webp" width="64" height="64" alt="">
+        <div>
+          <h1>Tetorica FM2610 Synth</h1>
+          <p id="chipSummary">YM2610B · 6 FM channels · 8 MHz</p>
+        </div>
+      </div>
+      <div class="master">
+        <label for="masterLevel">Master</label>
+        <input id="masterLevel" type="range" min="0" max="100" value="65">
+        <output id="masterValue" for="masterLevel">65%</output>
+        <button id="muteOutput" type="button" aria-pressed="false">Mute</button>
+      </div>
+    </header>
+
+    <div class="chip-bar">
+      <div id="chipModes" class="chip-modes" role="group" aria-label="Chip variant">
+        <button type="button" data-variant="ym2610b" aria-pressed="true">YM2610B <span>6 FM</span></button>
+        <button type="button" data-variant="ym2610" aria-pressed="false">Neo Geo (YM2610) <span>4 FM</span></button>
+      </div>
+      <div class="inline-controls">
+        <button id="silence" type="button">Stop sound</button>
+        <div class="workspace-switch" role="group" aria-label="Workspace layout">
+          <button id="codeMode" type="button" aria-controls="synthWorkbench" aria-pressed="false">Code</button>
+          <button id="synthMode" type="button" aria-controls="synthWorkbench" aria-pressed="true">Synth</button>
+        </div>
+        <button id="filesToggle" type="button" aria-controls="filesPanel" aria-expanded="false" title="Show or hide the Files sidebar">Files</button>
+      </div>
+    </div>
+    <p id="status" class="status" role="status">Play a key or trigger a sample to start audio.</p>
+    <input id="vgmInput" type="file" accept=".vgm,.vgz" aria-label="Import VGM or VGZ" hidden>
+    <section id="referenceSong" class="panel reference-song" aria-label="VGM reference playback" hidden>
+      <div class="inline-controls">
+        <label for="songSelect">VGM</label>
+        <select id="songSelect" aria-label="Reference VGM"></select>
+        <button id="songPlay" type="button" disabled>Play</button>
+        <button id="songPause" type="button" disabled>Pause</button>
+        <button id="songStop" type="button" disabled>Stop</button>
+        <output id="songTime">0:00 / 0:00</output>
+      </div>
+      <input id="songSeek" type="range" min="0" max="0" step="0.01" value="0" aria-label="Song position" disabled>
+      <p id="songStatus" class="status" role="status"></p>
+    </section>
+
+    <div id="workspace" class="workspace" data-mode="synth">
+      <aside id="filesPanel" class="panel fm2610-files" aria-label="Cassette files" hidden></aside>
+      <div id="synthWorkbench" class="workbench">
+    <div id="codeWorkspaceTabs" class="panel code-workspace-tabs" hidden></div>
+    <section id="outputPanel" class="panel monitor" aria-label="Audio output">
+      <div class="panel-heading">
+        <h2>Output</h2>
+        <div id="scopeModes" class="inline-controls" role="group" aria-label="Output display">
+          <button type="button" data-scope="waveform" aria-pressed="true">Waveform</button>
+          <button type="button" data-scope="spectrum" aria-pressed="false">Spectrum</button>
+        </div>
+      </div>
+      <canvas id="scope" width="900" height="150" role="img" aria-label="Output waveform"></canvas>
+    </section>
+
+    <section id="synthEditor" class="panel editor" aria-label="Sound sources">
+      <div id="sourceTabs" class="tabs" role="tablist" aria-label="Sound source">
+        <button type="button" id="fmTab" role="tab" aria-selected="true" aria-controls="fmPanel" data-source="fm">FM</button>
+        <button type="button" id="ssgTab" role="tab" aria-selected="false" aria-controls="ssgPanel" data-source="ssg" tabindex="-1">SSG</button>
+        <button type="button" id="adpcmATab" role="tab" aria-selected="false" aria-controls="adpcmAPanel" data-source="adpcm-a" tabindex="-1">ADPCM-A</button>
+        <button type="button" id="adpcmBTab" role="tab" aria-selected="false" aria-controls="adpcmBPanel" data-source="adpcm-b" tabindex="-1">ADPCM-B</button>
+        <button type="button" id="mixerTab" role="tab" aria-selected="false" aria-controls="mixerPanel" data-source="mixer" tabindex="-1">Mixer</button>
+      </div>
+      <div id="fmPanel" role="tabpanel" aria-labelledby="fmTab">
+        <div class="panel-heading fm-heading">
+          <h2>FM channels</h2>
+        </div>
+        <div id="fmChannels" class="inline-controls" role="group" aria-label="FM channel"></div>
+        <output id="fmChannelState" aria-live="off"></output>
+        <details id="fmEnvelope" class="fm-envelope" open>
+          <summary>Envelope</summary>
+          <div class="inline-controls envelope-toolbar" role="group" aria-label="Operator envelope selection">
+            <button type="button" class="op-color-1" data-envelope-operator="1" aria-pressed="false">OP1</button>
+            <button type="button" class="op-color-2" data-envelope-operator="2" aria-pressed="false">OP2</button>
+            <button type="button" class="op-color-3" data-envelope-operator="3" aria-pressed="false">OP3</button>
+            <button type="button" class="op-color-4" data-envelope-operator="4" aria-pressed="true">OP4</button>
+            <output data-envelope-readout></output>
+          </div>
+          <div class="operator-envelope-plot">
+            <canvas data-operator-envelope width="850" height="180" role="img" aria-label="Operator envelope guides. Select an operator and drag its points to edit."></canvas>
+            <button type="button" class="envelope-handle" data-envelope-handle="attack" aria-label="Attack">A</button>
+            <button type="button" class="envelope-handle" data-envelope-handle="decay" aria-label="Decay">D</button>
+            <button type="button" class="envelope-handle" data-envelope-handle="sustain" aria-label="Sustain">S</button>
+            <button type="button" class="envelope-handle" data-envelope-handle="release" aria-label="Release">R</button>
+          </div>
+          <fieldset id="fmParameters" aria-label="FM parameters">
+            <div class="presets">
+              <h3>Presets</h3>
+              <div id="fmPresets" class="inline-controls" role="group" aria-label="FM presets"></div>
+            </div>
+            <div id="fmCommon" class="common-controls"></div>
+            <div class="operators" aria-label="FM operators" role="group">
+              <div class="operator-heading"><span title="Click an operator to toggle its key gate">OP</span><div id="operatorHeader"></div></div>
+              <div id="operatorControls"></div>
+            </div>
+            <section id="fmChannel3Special" class="fm-channel3-special" aria-labelledby="fmChannel3SpecialHeading" hidden>
+              <div class="section-heading">
+                <h3 id="fmChannel3SpecialHeading">CH3 Special</h3>
+                <output id="fmChannel3SpecialState"></output>
+              </div>
+              <div id="fmChannel3SpecialControls"></div>
+            </section>
+          </fieldset>
+        </details>
+      </div>
+      <div id="ssgPanel" role="tabpanel" aria-labelledby="ssgTab" hidden></div>
+      <div id="adpcmAPanel" role="tabpanel" aria-labelledby="adpcmATab" hidden></div>
+      <div id="adpcmBPanel" role="tabpanel" aria-labelledby="adpcmBTab" hidden></div>
+      <div id="mixerPanel" role="tabpanel" aria-labelledby="mixerTab" hidden>
+        <div class="section-heading">
+          <h2>Output levels</h2>
+          <details class="mixer-help">
+            <summary aria-label="About Mixer">?</summary>
+            <p>These software levels apply to Keyboard, Code, and VGM. Master adjusts their combined output.</p>
+          </details>
+        </div>
+        <div id="mixerSources" class="mixer-sources"></div>
+      </div>
+    </section>
+
+    <section id="performancePanel" class="panel performance" aria-label="Performance">
+      <div id="performanceHeading" class="performance-heading">
+        <div id="performanceTabs" class="tabs" role="tablist" aria-label="Performance input">
+          <button type="button" id="keyboardTab" role="tab" aria-selected="true" aria-controls="keyboardPanel">Keyboard</button>
+          <button type="button" id="codeTab" role="tab" aria-selected="false" aria-controls="codePanel" tabindex="-1">Code</button>
+        </div>
+        <button id="codeExpand" type="button" aria-label="Maximize Code" title="Maximize Code beside Files" aria-pressed="false" aria-controls="codePanel" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"></path></svg>
+        </button>
+      </div>
+      <div id="keyboardPanel" role="tabpanel" aria-labelledby="keyboardTab">
+        <div class="keyboard-toolbar">
+          <div id="instruments" class="inline-controls" role="group" aria-label="Fretboard instrument"></div>
+          <div id="positions" class="inline-controls" role="group" aria-label="Fret position"></div>
+          <div id="strings" class="inline-controls" role="group" aria-label="String range"></div>
+          <div class="inline-controls octaves" role="group" aria-label="Octave">
+            <button id="octaveDown" type="button" aria-label="Lower octave">−</button>
+            <output id="octave">0</output>
+            <button id="octaveUp" type="button" aria-label="Raise octave">+</button>
+          </div>
+        </div>
+        <p id="keyboardStatus" class="keyboard-status" aria-live="off"></p>
+        <div id="keyboardWithWheels" class="keyboard-with-wheels">
+          <div id="fmKeyboardWheels" class="fm-keyboard-wheels" role="group" aria-label="FM performance controls">
+            <label><span>Pitch</span>
+              <input id="pitchBendWheel" type="range" min="-1000" max="1000" step="10" value="0" aria-label="Pitch Bend" aria-orientation="vertical" aria-valuetext="0.00 semitones">
+              <output id="pitchBendValue" for="pitchBendWheel" aria-live="off">0.00</output>
+            </label>
+            <label><span>Mod</span>
+              <input id="modulationWheel" type="range" min="0" max="127" value="0" aria-label="Modulation" aria-orientation="vertical" aria-valuetext="0%">
+              <output id="modulationValue" for="modulationWheel" aria-live="off">0%</output>
+            </label>
+          </div>
+          <div id="keyboard" aria-label="PC keys and fretboard"></div>
+        </div>
+        <div id="adpcmAKeyboard" role="group" aria-label="ADPCM-A drum keys" hidden></div>
+      </div>
+      <div id="codePanel" role="tabpanel" aria-labelledby="codeTab" hidden>
+        <div class="code-transport inline-controls" role="group" aria-label="Code playback">
+          <button id="runCode" type="button" title="Run a new Code session" aria-keyshortcuts="Control+Enter Meta+Enter">Run</button>
+          <button id="applyCode" type="button" title="Apply edits while keeping the current Code session" aria-keyshortcuts="Control+Shift+Enter Meta+Shift+Enter" disabled>Apply</button>
+          <button id="stopCode" type="button" title="Stop Code" disabled>Stop</button>
+          <output id="codeStatus" role="status"></output>
+        </div>
+        <div class="code-editor-wrap">
+          <textarea id="code" aria-label="JavaScript" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+          <div id="codeEditorHost" aria-label="JavaScript performance code editor"></div>
+        </div>
+        <p id="codeEditorNote" class="code-editor-note" role="status" hidden></p>
+        <pre id="codeOutput" aria-label="Code output" aria-live="polite"></pre>
+      </div>
+    </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
