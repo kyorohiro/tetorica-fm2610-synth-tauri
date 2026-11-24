@@ -5,7 +5,7 @@
     "README.md": "899cdac458253449c4085abf2c43d48e2ff45e46f9fa3e08becc7fbdc254f02d",
     "generated/ym2610b_wasm.js": "86aec63d42744ae2cf36d70ae548c10e269a41303fcfaf082c22bc8591e7c89b",
     "generated/ym2610b_wasm.wasm": "969114c5d69a8cddcef5934151ba5f6503001294f0c429710c9e3b011cefba73",
-    "index.html": "f280c87b152635ec4b782e2558ad6b1d5f4447567f9f11d90da204b2157545e6",
+    "index.html": "097e6754660b450f54f425652c83a6942cb97b80f27a4b1fb59763412a923f10",
     "js/adpcm_a_sample.js": "bcf050acf3a92fdfea8dcc8310adc4dddd83b4a53b5e2ffe0f9b0a6a0bad0d30",
     "js/adpcm_b_sample.js": "616e80162180173f5ece40127c40c3009abc59de143cf7c962860374810f2829",
     "js/audio_decode.js": "0f972b3983adb38f09e218cf4f1b1dc2fc5e840f0e3cf754c4bd2cd40083e9f4",
@@ -109,9 +109,9 @@
     "synth-fm2610/code_editor.js": "68438bcbe263e53e2f8d5ab274b1e4440c1b01a1703387f6e1d40b59f87b4692",
     "synth-fm2610/code_examples.js": "8e396dc8167c11d00f54755b1a5c9bca1ffaabb3d381d0a337636a15bc261a7c",
     "synth-fm2610/code_fx.js": "3cc05751599c7a1bf1096803eba54fae8c9440a1a6c9fd4055ecf886baab297f",
-    "synth-fm2610/files.js": "56614a01741bcd97e32133d0ddf937202ae3ae220b26aaf77b5fe02ecc7c1384",
+    "synth-fm2610/files.js": "79aa87a50c8b6a058643038e43e57b9529649eecc8b8fb4969ae4cf8f2fc6ceb",
     "synth-fm2610/fm_patch.js": "bbafcf03058083b3bd8e912660069d1eedadcb783c7074e3c6bf34821c6c612d",
-    "synth-fm2610/index.html": "99a74f1f1516407fac75bc601a3b27b2c94396a3741d86959605952206be80a7",
+    "synth-fm2610/index.html": "d5883e6450420b713967a1159bc06a8eaa4e41eb5ff8142f8cd7440a18a678d1",
     "synth-fm2610/sections.js": "ca30f18e9fbb91fa2169f36a3b3fc82decb4de1fdfa5182b60ebd81d83d8ab5d",
     "synth-fm2610/song_adpcm_a_waveform.js": "9ecbebd2c1f9c6d722cdf4c62efb969e6d5278d3b140eaa0aa7154ff6dcfdeb3",
     "synth-fm2610/song_adpcm_a_waveform_worker.js": "66d3fae3969ddb1955ee1bdd46091a5a574500c8215ff7500f6ac1def68703b2",
@@ -122,8 +122,8 @@
     "synth-fm2610/song_player.js": "0e6e6fc606b0b4eadaf3545859f3b5ff2a70e6c11e7e6d3dd1ecdff5e500be41",
     "synth-fm2610/song_ssg_state.js": "3a5aa34ecc7cfa1d297005d608dc4aa1194c16be2b3a6a02585c79b8e547bf6a",
     "synth-fm2610/ssg_preset.js": "dbc7e6d3121be191eee90f82c14d07cf7eaabf5502241ccf182c2ff49536b10d",
-    "synth-fm2610/synth.css": "ed80f2a4e46c047ee6c994562bed316d11d31a872cbc1b3adc95d75a647c970b",
-    "synth-fm2610/synth.js": "27d64745f0420086e499f6bad4b62d3a5519be686dbe3c6067c118c2b6103af5",
+    "synth-fm2610/synth.css": "599bc1c9d933ea5368d11c42927ed1a9ef5a355ad369551fa72de84c8d195ea0",
+    "synth-fm2610/synth.js": "8570fdb4a99c3bd3e82137bd5e59351a5b624f5f175f86149269ed3df965ff67",
     "synth-fm2610/vgm.js": "28d10fd64fc2feace0bba87c12d98babae98e700db6f5752e1d16eb7e997733e",
     "synth-fm2610/workspace.js": "c47f8902b7c0db2e1075c565ab85f94be816b1c52c09a27f7a4eaade8cd07222",
     "synth-spu/file_context_menu.js": "246c5bc3108826c68c85c3539c45bafa939e1ef99d69dd84cf81b416e40786c3",
@@ -146,6 +146,6 @@
     "tetorica_fm2610_synth.webp": "d0070552cdb36c4cd57edb7881f307489b272963bcce1a682cb38fa33ecb89a0",
     "vgm_analyzer/stored_zip.js": "da8f0c8d533f23a180c0d287f04287262394be97145048c26bff21644b0038fc"
   },
-  "sha256": "91d13c519b55ef83e037cb715675dee6c1ad9a72bf2e77e20f4c14443beef636",
-  "version": "sha256-91d13c519b55"
+  "sha256": "72c437eb0a2939b94e188760de8efa8eec7323921fe9313dceebc924d0e2dd28",
+  "version": "sha256-72c437eb0a29"
 }
